@@ -1,0 +1,5 @@
+{
+  "name": "OTC ProBot AI",
+  "description": "An advanced AI-powered OTC trading assistant that monitors 9 markets, simulates real-time data, and generates professional trade analysis using Gemini.",
+  "requestFramePermissions": []
+}
