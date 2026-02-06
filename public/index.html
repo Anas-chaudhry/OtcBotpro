@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OTC ProBot AI</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Import Map: Defines where to load libraries from -->
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+        "recharts": "https://esm.sh/recharts@2.12.0?external=react,react-dom",
+        "lucide-react": "https://esm.sh/lucide-react@0.330.0",
+        "react-markdown": "https://esm.sh/react-markdown@9.0.1?external=react"
+      }
+    }
+    </script>
+
+    <!-- Babel Standalone: Compiles React/TSX in the browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- Main Application Logic -->
+    <!-- data-type="module" allows using 'import' statements -->
+    <!-- data-presets="react,typescript" allows TSX syntax -->
+    <script type="text/babel" data-type="module" data-presets="react,typescript" src="app.js"></script>
+  </body>
+</html>
