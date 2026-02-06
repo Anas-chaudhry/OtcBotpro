@@ -9,7 +9,7 @@ import MarketCard from './components/MarketCard';
 import TradingChart from './components/TradingChart';
 import AnalysisPanel from './components/AnalysisPanel';
 import IndicatorBadge from './components/IndicatorBadge';
-import { ShieldAlert, BarChart3, LayoutDashboard, Zap, Activity } from 'lucide-react';
+import { BarChart3, LayoutDashboard, Zap, Activity } from 'lucide-react';
 
 const App: React.FC = () => {
   // State
@@ -23,7 +23,6 @@ const App: React.FC = () => {
   const [selectedMarketId, setSelectedMarketId] = useState<string>(INITIAL_MARKETS[0].id);
   const [analyses, setAnalyses] = useState<Record<string, AnalysisResult>>({});
   const [analyzing, setAnalyzing] = useState(false);
-  const [apiKeyMissing, setApiKeyMissing] = useState(false);
 
   // Derived state
   const selectedMarket = markets.find(m => m.id === selectedMarketId) || markets[0];
@@ -40,11 +39,6 @@ const App: React.FC = () => {
 
   // Analysis Handler
   const handleAnalyze = useCallback(async () => {
-    if (!process.env.API_KEY) {
-      setApiKeyMissing(true);
-      return;
-    }
-    
     setAnalyzing(true);
     try {
       const resultText = await analyzeMarket(selectedMarket);
@@ -79,12 +73,6 @@ const App: React.FC = () => {
         </div>
         
         <div className="flex items-center gap-4">
-          {apiKeyMissing && (
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-red-500/10 border border-red-500/30 rounded-full text-red-400 text-xs font-medium animate-pulse">
-              <ShieldAlert size={14} />
-              <span>API KEY MISSING</span>
-            </div>
-          )}
           <div className="hidden md:flex items-center gap-2 text-xs text-gray-500 bg-gray-900/50 px-3 py-1.5 rounded-full border border-gray-800">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
             Live Connection

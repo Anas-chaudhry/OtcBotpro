@@ -1,42 +1,64 @@
-import { GoogleGenAI } from "@google/genai";
-import { SYSTEM_INSTRUCTION } from "../constants";
 import { Market } from "../types";
 
+// Simulated Analysis Service
+// This replaces the external Gemini API with an internal algorithmic generator
+// to allow the project to run publicly without API keys.
+
 export const analyzeMarket = async (market: Market): Promise<string> => {
-  if (!process.env.API_KEY) {
-    throw new Error("API Key is missing. Please set REACT_APP_GEMINI_API_KEY.");
+  // Simulate network delay for realism
+  await new Promise(resolve => setTimeout(resolve, 1500));
+
+  const isBullish = market.changePercent > 0;
+  const isStrong = Math.abs(market.changePercent) > 0.5;
+  
+  // Determine Trend
+  let trend = "Sideways";
+  if (market.changePercent > 0.1) trend = "Up";
+  if (market.changePercent < -0.1) trend = "Down";
+
+  // Determine Signal based on simple technical logic
+  let signal = "No Trade";
+  let confidence = "Low";
+  
+  if (market.rsi < 30 && isBullish) {
+    signal = "Buy";
+    confidence = "High";
+  } else if (market.rsi > 70 && !isBullish) {
+    signal = "Sell";
+    confidence = "High";
+  } else if (Math.abs(market.macd) > 0.0002) {
+    signal = isBullish ? "Buy" : "Sell";
+    confidence = "Medium";
   }
 
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
-  // Construct a prompt with the latest market data
-  const prompt = `
-    Analyze the following OTC market data and provide a trading signal:
+  // Calculate Levels
+  const entry = market.price;
+  const digits = market.category === 'Forex' || market.category === 'Commodities' ? 4 : 2;
+  
+  // Simple Risk Management Calculation
+  const stopLossPercent = 0.005; // 0.5% risk
+  const takeProfitPercent = 0.01; // 1% reward
+  
+  const stopLoss = signal === "Buy" 
+    ? entry * (1 - stopLossPercent) 
+    : entry * (1 + stopLossPercent);
     
-    Market: ${market.name}
-    Current Price: ${market.price}
-    24h Change: ${market.changePercent}%
-    RSI (14): ${market.rsi}
-    MACD: ${market.macd}
-    Volatility: ${market.volatility}
-    Recent Trend: ${market.changePercent > 0 ? "Uptrend" : market.changePercent < 0 ? "Downtrend" : "Sideways"}
-    
-    Based on this data, is this a good time to enter? Use your strategies defined in the system instructions.
-  `;
+  const takeProfit = signal === "Buy" 
+    ? entry * (1 + takeProfitPercent) 
+    : entry * (1 - takeProfitPercent);
 
-  try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
-      contents: prompt,
-      config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-        temperature: 0.7, // Balanced creativity and logic
-      }
-    });
+  // Generate Markdown Response
+  return `
+**Market**: ${market.name}
+**Trend**: ${trend}
+**Signal**: ${signal}
+**Entry**: ${entry.toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits })}
+**Stop Loss**: ${stopLoss.toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits })}
+**Take Profit**: ${takeProfit.toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits })}
+**Risk-Reward**: 1:2
+**Confidence Level**: ${confidence}
 
-    return response.text || "No analysis generated.";
-  } catch (error) {
-    console.error("Gemini API Error:", error);
-    return "Error generating analysis. Please check your API key and connection.";
-  }
+**Reasoning**:
+Internal technical algorithms detected ${trend.toLowerCase()} momentum. RSI is currently at **${market.rsi}**, which indicates ${market.rsi > 70 ? "overbought" : market.rsi < 30 ? "oversold" : "neutral"} conditions. MACD divergence suggests potential ${signal === "Buy" ? "upward" : signal === "Sell" ? "downward" : "ranging"} movement. Volatility is **${market.volatility}**, suggesting ${market.volatility === "High" ? "caution with wider stops" : "standard position sizing"}.
+`;
 };

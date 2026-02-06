@@ -19,7 +19,7 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({ analysis, loading, onAnal
           </div>
           <div>
             <h2 className="text-lg font-bold text-gray-100">AI Strategy Center</h2>
-            <div className="text-xs text-gray-500 font-mono mt-1">POWERED BY GEMINI-3-FLASH</div>
+            <div className="text-xs text-gray-500 font-mono mt-1">POWERED BY PROBOT ANALYTICS</div>
           </div>
         </div>
         
@@ -51,15 +51,15 @@ const AnalysisPanel: React.FC<AnalysisPanelProps> = ({ analysis, loading, onAnal
             <div className="w-20 h-20 bg-gray-800/50 rounded-full flex items-center justify-center mb-4 border border-gray-700">
               <Bot size={40} className="text-gray-400" />
             </div>
-            <h3 className="text-lg font-medium text-gray-200 mb-2">AI Analyst Standby</h3>
-            <p className="text-sm text-gray-500 max-w-md">Select a market from the list above and click "Generate New Signal" to receive a comprehensive trading strategy.</p>
+            <h3 className="text-lg font-medium text-gray-200 mb-2">Algorithm Standby</h3>
+            <p className="text-sm text-gray-500 max-w-md">Select a market from the list above and click "Generate New Signal" to run the technical analysis strategy.</p>
           </div>
         )}
       </div>
       
       {/* Footer */}
       <div className="p-4 border-t border-gray-800/60 bg-gray-900/40 text-xs text-gray-500 text-center">
-         AI analysis is for educational purposes only. Trading involves high risk.
+         Analysis is for educational purposes only. Trading involves high risk.
       </div>
     </div>
   );
